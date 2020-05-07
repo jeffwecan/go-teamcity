@@ -141,7 +141,6 @@ func (s *ProjectFeatureService) Update(feature ProjectFeature) (ProjectFeature, 
 		Properties: feature.Properties(),
 	}
 	updatedProjectFeature := &projectFeatureJSON{}
-
 	url := fmt.Sprintf("projects/%s/projectFeatures/%s", s.ProjectID, feature.ID())
 	if err := s.restHelper.put(url, &requestBody, updatedProjectFeature, "projectFeature"); err != nil {
 		return nil, err
@@ -154,6 +153,8 @@ func (s *ProjectFeatureService) parseProjectFeatureJSONResponse(feature projectF
 	switch feature.Type {
 	case "versionedSettings":
 		return loadProjectFeatureVersionedSettings(s.ProjectID, feature)
+	case "OAuthProvider":
+		return loadProjectFeatureOauthProviderSettings(s.ProjectID, feature)
 	default:
 		return nil, fmt.Errorf("Unknown project feature type %q", feature.Type)
 	}
