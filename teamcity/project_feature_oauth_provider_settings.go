@@ -6,14 +6,15 @@ import (
 )
 
 type ProjectFeatureOauthProviderSettingsOptions struct {
-	DisplayName  string
-	Endpoint     string
-	FailOnError  bool
-	Namespace    string
-	ProviderType string
-	RoleId       string
-	SecretId     string
-	Url          string
+	DisplayName        string
+	Endpoint           string
+	FailOnError        bool
+	ParameterNamespace string
+	VaultNamespace     string
+	ProviderType       string
+	RoleId             string
+	SecretId           string
+	Url                string
 }
 
 // ProjectFeatureOauthProviderSettings represents the oauth provider settings feature for a project.
@@ -62,7 +63,8 @@ func (f *ProjectFeatureOauthProviderSettings) Properties() *Properties {
 		NewProperty("displayName", string(f.Options.DisplayName)),
 		NewProperty("endpoint", string(f.Options.Endpoint)),
 		NewProperty("fail-on-error", fmt.Sprintf("%t", f.Options.FailOnError)),
-		NewProperty("namespace", string(f.Options.Namespace)),
+		NewProperty("namespace", string(f.Options.ParameterNamespace)),
+		NewProperty("vault-namespace", string(f.Options.VaultNamespace)),
 		NewProperty("providerType", string(f.Options.ProviderType)),
 		NewProperty("role-id", string(f.Options.RoleId)),
 		NewProperty("secure:secret-id", string(f.Options.SecretId)),
@@ -96,7 +98,11 @@ func loadProjectFeatureOauthProviderSettings(projectID string, feature projectFe
 	}
 
 	if encodedValue, ok := feature.Properties.GetOk("namespace"); ok {
-		settings.Options.Namespace = encodedValue
+		settings.Options.ParameterNamespace = encodedValue
+	}
+
+	if encodedValue, ok := feature.Properties.GetOk("vault-namespace"); ok {
+		settings.Options.VaultNamespace = encodedValue
 	}
 
 	if encodedValue, ok := feature.Properties.GetOk("providerType"); ok {
